@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "svensoundcachecontrol",
+  "indexUrl": "https://hlnd2t.github.io/GoldSrc_VibeSignatures/gamesymbols/index.json",
+  "gameVersions": ["svencoop-10257", "svencoop-8948"],
+  "symbols": {
+    "client": {
+      "CClient_SoundEngine_MapStarted": "function",
+      "CClient_SoundEngine_ClearSoundArrays": "function",
+      "CClient_SoundEngine_FlushCache": "function",
+      "CClient_SoundEngine_LoadSoundList": "function",
+      "gEngfuncs": "global"
+    }
+  }
+}

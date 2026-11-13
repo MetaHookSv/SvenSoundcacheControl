@@ -1,0 +1,10 @@
+/.vs
+/Debug
+/Release
+/build/
+/install/
+*.user
+__pycache__/
+
+# Generated from the shared FormatValidation source during CMake configuration.
+/.clang-format
