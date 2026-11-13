@@ -13,7 +13,8 @@ if(NOT WIN32 OR NOT MSVC OR NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 include(cmake/Dependencies.cmake)
 svensoundcachecontrol_prepare_dependencies()
-add_library(SvenSoundcacheControl SHARED src/plugins.cpp src/soundcache_control.h
+add_library(SvenSoundcacheControl SHARED
+    src/plugins.cpp src/privatehook.cpp src/privatehook.h src/soundcache_control.h
     "${METAHOOK_SOURCE_PATH}/include/HLSDK/common/interface.cpp")
 target_compile_features(SvenSoundcacheControl PRIVATE cxx_std_11)
 target_include_directories(SvenSoundcacheControl PRIVATE
