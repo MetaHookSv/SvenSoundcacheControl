@@ -24,8 +24,10 @@ not included; do not load both plugins.
 ## Behavior and limits
 
 The original sound engine clears its in-memory indices only when the map name
-changes. This plugin calls its native `ClearSoundArrays` on every map start and
-invalidates the native disk sound-list cache, then uses the original loader.
+changes. This plugin marks each join at `HUD_VidInit`, then calls native
+`ClearSoundArrays` and invalidates the native disk sound-list cache before the
+first sound-list load or map-start callback. A later `MapStarted` callback keeps
+sounds already loaded for that join. Loading still uses the original loader.
 It does not delete audio assets or implement a replacement sound engine.
 
 A remote join can require one automatic reconnect while the original `dlfile`
@@ -42,13 +44,16 @@ remove the file the same server must serve to other players.
 Windows MSVC x86 only, MetaHook API 109 or newer, Sven client builds 8948/10257.
 Other clients and missing gamedata produce a clear startup error. Catalog
 coverage alone does not imply that every build has been tested in a live game.
+Connection tracking uses the MetaHook SDK's `net_api_svengine.h` types: Sven's
+network status ABI is 104 bytes, rather than the original HLSDK's 72 bytes.
 
 ## Build and test
 
 Requires Visual Studio 2022, CMake 3.21+, Python 3.9+, and network access to the
 symbol catalog. The MetaHook source tree supplies SDK headers, `interface.cpp`
-and the shared gamedata synchronization/validation scripts. It is fetched from
-`main` unless `METAHOOK_SOURCE_PATH` is set; no SDK library is linked.
+and the shared gamedata synchronization/validation scripts. A pinned SDK commit
+including `net_api_svengine.h` is fetched unless `METAHOOK_SOURCE_PATH` is set;
+no SDK library is linked.
 
 ```powershell
 cmake -S . -B build/x86/Release -G "Visual Studio 17 2022" -A Win32 -DMETAHOOK_SOURCE_PATH=../../MetaHook -DCMAKE_INSTALL_PREFIX=install/x86/Release
@@ -70,4 +75,6 @@ Optional Visual Studio F5 deployment uses `METAHOOKSV_ENABLE_LAUNCH_GAME=ON` and
 the shared LaunchGame module; it requires an existing MetaHook installation with
 this plugin already enabled. Normal builds do not deploy to a game.
 
-Issue: https://github.com/MetaHookSv/MetaHookSv/issues/974
+Issues:
+- https://github.com/MetaHookSv/MetaHookSv/issues/974
+- https://github.com/MetaHookSv/MetaHookSv/issues/975

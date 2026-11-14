@@ -13,7 +13,7 @@ using ClearSoundArraysFn = void(__fastcall*)(void* self, int edx);
 using FlushCacheFn       = void(__fastcall*)(void* self, int edx, bool includingLocal);
 using LoadSoundListFn    = bool(__fastcall*)(void* self, int edx);
 
-// Hooks the client sound engine and wraps HUD_Init/HUD_Shutdown in `exports`.
+// Hooks the client sound engine and wraps HUD_Init/HUD_VidInit/HUD_Shutdown.
 bool InstallHooks(cl_exportfuncs_t* exports);
 void UninstallHooks();
 } // namespace svensoundcachecontrol
