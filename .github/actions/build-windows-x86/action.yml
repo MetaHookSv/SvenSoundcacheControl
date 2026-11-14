@@ -9,20 +9,9 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Clone MetaHook SDK headers
-      shell: pwsh
-      run: |
-        $metahookPath = Join-Path (Split-Path $env:GITHUB_WORKSPACE -Parent) 'MetaHook'
-        & git clone --depth 1 --branch main https://github.com/MetaHookSv/MetaHook $metahookPath
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        & git -C $metahookPath rev-parse HEAD
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        # The plugin consumes include/ only: it compiles interface.cpp and links no SDK library.
-        "METAHOOK_SOURCE_PATH=$metahookPath" >> $env:GITHUB_ENV
-
     - name: Build and install
       shell: cmd
-      run: call scripts\build-SvenSoundcacheControl-x86-Release.bat "-DMETAHOOK_SOURCE_PATH=%METAHOOK_SOURCE_PATH%"
+      run: call scripts\build-SvenSoundcacheControl-x86-Release.bat "-DMETAHOOK_SOURCE_PATH="
 
     - name: Test behavior
       shell: cmd
@@ -30,7 +19,7 @@ runs:
 
     - name: Validate installed gamedata
       shell: cmd
-      run: python "%METAHOOK_SOURCE_PATH%\scripts\validate-gamedata.py" install\x86\Release\svencoop\metahook\gamedata\svensoundcachecontrol --manifest scripts\manifests\svensoundcachecontrol.json
+      run: python build\x86\Release\_deps\svensoundcachecontrol_metahook-src\scripts\validate-gamedata.py install\x86\Release\svencoop\metahook\gamedata\svensoundcachecontrol --manifest scripts\manifests\svensoundcachecontrol.json
 
     - name: Package plugin
       id: package
