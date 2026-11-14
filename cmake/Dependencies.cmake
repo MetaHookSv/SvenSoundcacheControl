@@ -1,10 +1,11 @@
-set(METAHOOK_SOURCE_PATH "$ENV{METAHOOK_SOURCE_PATH}" CACHE PATH "MetaHook source tree; empty fetches main")
+set(METAHOOK_SOURCE_PATH "$ENV{METAHOOK_SOURCE_PATH}" CACHE PATH "MetaHook source tree; empty fetches the pinned SDK")
 
 # The plugin compiles part of the SDK and includes its public headers, so an
 # external tree must provide both the sources and the interfaces it uses.
 function(svensoundcachecontrol_validate_metahook_source source)
     foreach(required include/metahook.h include/HLSDK/common/interface.cpp
-        include/HLSDK/common/cvardef.h include/Interface/IPlugins.h
+        include/HLSDK/common/cvardef.h include/HLSDK/common/net_api_svengine.h
+        include/Interface/IPlugins.h
         scripts/sync-gamedata.py scripts/validate-gamedata.py)
         if(NOT EXISTS "${source}/${required}" OR IS_DIRECTORY "${source}/${required}")
             message(FATAL_ERROR "METAHOOK_SOURCE_PATH is missing ${required}: ${source}")
@@ -20,8 +21,8 @@ function(svensoundcachecontrol_prepare_dependencies)
         include(FetchContent)
         FetchContent_Declare(svensoundcachecontrol_metahook
             GIT_REPOSITORY https://github.com/MetaHookSv/MetaHook
-            # MetaHook is tracked as a branch: always fetch the latest main.
-            GIT_TAG origin/main
+            # Includes the SvEngine network ABI types required by this plugin.
+            GIT_TAG c7c2af7d9dbfee94ae3fb4514e97efb856835ec7
             GIT_SUBMODULES ""
             # This SDK directory has no CMakeLists.txt: populate without building the launcher.
             SOURCE_SUBDIR include
